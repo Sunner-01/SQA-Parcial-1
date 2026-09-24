@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es"><meta charset="utf-8"><title>Informe del primer parcial SQA</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.4;color:#161616;background:#eee;margin:0}section{width:210mm;min-height:270mm;background:white;padding:17mm;margin:8mm auto;position:relative}h1{font-size:24pt;line-height:1.15;margin:0 0 8mm}h2{font-size:17pt;margin:0 0 6mm}h3{font-size:12pt;margin:5mm 0 2mm}p{margin:0 0 3mm}table{width:100%;border-collapse:collapse;margin:4mm 0;font-size:10pt}td,th{padding:2.5mm;border:1px solid #d9d9d9;text-align:left;vertical-align:top}th{background:#e9edf1}tr:nth-child(even){background:#f8f9fa}.page{margin-top:8mm;font-size:9pt;color:#555}code{font-size:9pt;overflow-wrap:anywhere}.note{font-size:10pt;color:#444}.toolbar{padding:12px;text-align:center;background:#202d3d;color:white}.toolbar button{padding:8px 18px;margin-left:12px}@page{size:A4;margin:10mm 0}@media print{body{background:white}.toolbar{display:none}section{margin:0;min-height:0;width:210mm;break-after:page;padding:7mm 17mm}section:last-child{break-after:auto}}
+</style>
+<div class="toolbar">Completar nombres y enlaces en una copia antes de entregar. Imprimir en A4, escala 100 %, sin encabezados del navegador.<button onclick="window.print()">Imprimir o guardar PDF</button></div>
+<section>
+<h1>Pruebas del sistema de inventario</h1>
+<p>Primer parcial de Software Quality Assurance · Univalle</p>
+<p>Fecha de verificación técnica: 24 de septiembre de 2026</p>
+<h3>Objetivo</h3><p>Verificar categorías, productos, imágenes y exportaciones del proyecto Spring Boot entregado por el docente. Las pruebas comprueban datos, códigos de respuesta y manejo de errores en las capas Controller, Service y Utils.</p>
+<h3>Resultado técnico</h3><p>La ejecución con JDK 25 finalizó con 88 pruebas aprobadas, sin fallos ni errores. La colección funcional sobre MySQL completó 25 solicitudes y 57 verificaciones sin fallos. La cobertura global de líneas fue 97,51 %. El detalle de otras métricas y sus límites se presenta en la página 5.</p>
+<h3>Integrantes y organización</h3>
+<table><tr><th>Nombre</th><th>Responsabilidad</th></tr>
+<tr><td>Persona 1</td><td>Scrum Master, entorno, integración y cobertura</td></tr>
+<tr><td>Persona 2</td><td>Servicios y controlador de categorías</td></tr>
+<tr><td>Persona 3</td><td>Servicios y controlador de productos</td></tr>
+<tr><td>Persona 4</td><td>Compresión, Excel y registro de bugs</td></tr>
+<tr><td>Jesus Zeballos (Persona 5)</td><td>Postman, plan, casos e informe</td></tr></table>
+<p>Repositorio del equipo: https://github.com/Sunner-01/SQA-Parcial-1</p>
+<p>Rama Persona 5: jesus-zeballos</p>
+<h3>Alcance y selección</h3><p>Los controladores exponen las operaciones HTTP; los servicios coordinan repositorios, categorías y productos; las utilidades comprimen imágenes y generan Excel. Estas siete clases concentran los comportamientos solicitados. No se incluyen interfaz gráfica, carga, seguridad ni cambios de reglas de negocio.</p>
+<p class="note">Las pruebas y este material se prepararon con asistencia de IA, contemplada por el enunciado. Cada integrante revisa, ejecuta y documenta su parte antes de subirla desde su cuenta.</p><p class="page">1 de 6</p>
+</section>
+<section><h2>Plan de pruebas e historias de usuario</h2>
+<h3>Estrategia</h3><p>JUnit 5 ejecuta los escenarios; Mockito sustituye DAOs en los servicios y servicios en los controladores. MockMvc standalone comprueba rutas, parámetros y multipart. ArgumentCaptor verifica los campos enviados. Los tests de Excel abren los libros reales con Apache POI.</p><p>Las pruebas originales de repositorio y contexto usan H2. Postman/Newman recorre la API completa con MySQL real, crea datos propios y los elimina al terminar. Se distinguen pruebas unitarias, de componente y de integración.</p>
+<table><tr><th>Historia</th><th>Necesidad y aceptación</th></tr>
+<tr><td>HU01 Categorías</td><td>Crear, listar y consultar categorías; los datos guardados pueden recuperarse.</td></tr>
+<tr><td>HU02 Modificación</td><td>Actualizar y eliminar categorías; el cambio persiste y la consulta tras borrar retorna 404.</td></tr>
+<tr><td>HU03 Excel categorías</td><td>Descargar ID, nombre y descripción en XLSX.</td></tr>
+<tr><td>HU04 Alta de productos</td><td>Guardar producto con imagen y categoría; una categoría ausente produce 404.</td></tr>
+<tr><td>HU05 Consultas</td><td>Listar, buscar por ID y filtrar por nombre con imagen recuperada.</td></tr>
+<tr><td>HU06 Actualización</td><td>Editar nombre, precio, cantidad, categoría e imagen; eliminar producto.</td></tr>
+<tr><td>HU07 Excel productos</td><td>Descargar ID, nombre, precio, cantidad y categoría.</td></tr>
+<tr><td>HU08 Errores</td><td>Formato inválido 400, ausentes 404 y fallos simulados de repositorio 500.</td></tr></table>
+<h3>Preparación y criterios de cierre</h3><p>JDK 25 y Maven Wrapper para Java; Docker Desktop o XAMPP con MySQL y API en localhost:8080 para pruebas funcionales. Cada prueba unitaria prepara sus datos y mocks. La colección funcional requiere ejecutar los requests en orden.</p><p>Cierre: suite y colección aprobadas, métricas completas revisadas, hallazgos registrados y PR revisados. La calidad depende de las assertions y de los escenarios, no solamente del porcentaje.</p><p class="page">2 de 6</p></section>
+<section><h2>Casos unitarios y de componente</h2>
+<p>Precondición común: JDK 25 y dependencias descargadas. Los siguientes casos agrupan escenarios; su detalle ejecutable está en los archivos de test y en PLAN-Y-CASOS.md.</p>
+<table><tr><th>ID</th><th>Datos y acción</th><th>Resultado esperado</th></tr>
+<tr><td>CU01–03</td><td>Consultar categorías, ausentes, guardar entidad o retorno null.</td><td>Lista/objeto correcto; 200, 404 o 400. DAO con excepción produce 500.</td></tr>
+<tr><td>CU04–06</td><td>Actualizar nombre y descripción; borrar ID; simular errores.</td><td>ID preservado, save correcto, ausencia sin save; 200/400/404/500 según caso.</td></tr>
+<tr><td>CU07–08</td><td>Guardar producto con categoría válida o ausente.</td><td>Asociación correcta; 404 sin persistir si falta categoría; 400/500 en errores.</td></tr>
+<tr><td>CU09–10</td><td>Consultar, listar y filtrar productos con imagen comprimida.</td><td>Bytes originales y datos; vacío 404, error de DAO 500.</td></tr>
+<tr><td>CU11–13</td><td>Actualizar todos los campos y borrar producto.</td><td>Datos completos, ID conservado y operaciones al repositorio verificadas.</td></tr>
+<tr><td>CU14–16</td><td>Rutas HTTP, multipart, precio abc, ID abc, JSON inválido y archivo ausente.</td><td>Propagación de respuesta; captura de campos; errores 400 sin servicio.</td></tr>
+<tr><td>CU17–18</td><td>Exportar categorías/productos con filas, sin filas y salida fallida.</td><td>Cabeceras, valores y tipos correctos; IOException propagada.</td></tr>
+<tr><td>CU19–20</td><td>Comprimir y recuperar 8192 bytes, vacío válido, null y cabecera corrupta.</td><td>Igualdad byte a byte; null rechazado; corrupta retorna vacío como comportamiento caracterizado.</td></tr></table>
+<h3>Herramientas y evidencias</h3><p>MockitoExtension, @Mock, @InjectMocks, assertions de JUnit, verify y ArgumentCaptor. Se preservan 28 tests originales y se agregan 60. Ocho tests originales usan integración con H2; no se presentan las 88 pruebas como unitarias puras.</p><p>Comando global: <code>mvnw.cmd -B clean verify</code>. Evidencia por clase en Surefire y resumen en <code>evidencias/resumen-junit.json</code>. El responsable debe adjuntar su ejecución y el commit probado.</p><p class="page">3 de 6</p></section>
+<section><h2>Pruebas funcionales con Postman</h2>
+<p>Precondiciones: MySQL con db_inventory, API en 8080, entorno local importado y fixture producto.png seleccionado. Los IDs se capturan desde POST y se reutilizan; no se borran registros ajenos por IDs fijos.</p>
+<table><tr><th>Caso</th><th>Requests y pasos</th><th>Esperado</th></tr>
+<tr><td>CF01</td><td>01–03 Crear categoría única, listar y consultar.</td><td>200; ID y nombre persistidos.</td></tr>
+<tr><td>CF02</td><td>04–05 Actualizar categoría y releer.</td><td>200; nombre y descripción nuevos.</td></tr>
+<tr><td>CF03</td><td>06–09 Crear producto, leer, listar y filtrar.</td><td>200; categoría, precio 12, cantidad 5 y PNG original.</td></tr>
+<tr><td>CF04</td><td>10–11 Actualizar a Queso SQA y consultar.</td><td>Precio 25, cantidad 9, nombre e imagen correctos.</td></tr>
+<tr><td>CF05</td><td>12–13 Exportar categorías y productos.</td><td>200; archivo adjunto y firma ZIP. Contenido de celdas probado con POI.</td></tr>
+<tr><td>CF06</td><td>14–17 Consultar ID 0, categoría ausente y actualización ausente.</td><td>404; código de negocio -1.</td></tr>
+<tr><td>CF07</td><td>18–21 Sin archivo, precio abc, ID abc y JSON inválido.</td><td>400.</td></tr>
+<tr><td>CF08</td><td>22–25 Borrar producto, comprobar, borrar categoría y comprobar.</td><td>DELETE 200; GET posterior 404.</td></tr></table>
+<h3>Resultado observado</h3><p>Ejecución completada: 25 solicitudes ejecutadas, 57 aserciones aprobadas y 0 fallos (100 % éxito). Se verificó la persistencia de datos y el manejo de respuestas 200, 400 y 404 en MySQL local.</p>
+<p>Reportes generados: <code>evidencias/newman-verificado.json</code> y <code>evidencias/postman-verificado.log</code>.</p>
+<div style="text-align: center; margin: 12px 0;">
+  <img src="../evidencias/captura-postman.png" alt="Resultado de pruebas Postman" style="max-width: 95%; max-height: 280px; border: 1px solid #ccc; border-radius: 4px;">
+</div>
+<p class="page">4 de 6</p></section>
+<section><h2>Cobertura y problemas encontrados</h2>
+<table><tr><th>Alcance</th><th>Líneas</th><th>Instrucciones</th><th>Ramas</th></tr>
+<tr><td>Proyecto completo</td><td>97,51 %</td><td>79,34 %</td><td>35,07 %</td></tr>
+<tr><td>Controller + Service + Utils</td><td>98,37 %</td><td>98,28 %</td><td>92,50 %</td></tr>
+<tr><td>Services</td><td>100 %</td><td>100 %</td><td>100 %</td></tr>
+<tr><td>Controllers</td><td>100 %</td><td>100 %</td><td>No contabilizadas</td></tr>
+<tr><td>Utils</td><td>95 %</td><td>94,57 %</td><td>81,25 %</td></tr></table>
+<p>JaCoCo registra 392 de 402 líneas globales cubiertas. La cobertura global de ramas/instrucciones incluye código generado por Lombok en modelos y no alcanza el mismo porcentaje. No se excluyeron clases para elevar métricas. El código objetivo de las siete clases tiene 361 de 367 líneas cubiertas.</p>
+<table><tr><th>ID y estado</th><th>Problema, evidencia y acción</th></tr>
+<tr><td>ENV01 Resuelto en entorno</td><td>Configuración de compatibilidad de JDK y dependencias para ejecución limpia de la API y su posterior compilación con Maven Wrapper.</td></tr>
+<tr><td>BUG01 Reproducido y abierto</td><td>Util.decompressZLib({1,2,3,4}) silencia el formato inválido y retorna vacío. Test de caracterización agregado. Propuesta: error explícito, contrato a confirmar.</td></tr>
+<tr><td>RIESGO02 Inspección</td><td>El bucle de Inflater no comprueba falta de progreso; entrada truncada podría no terminar. Pendiente reproducir en proceso aislado con límite externo. Propuesta: controlar needsInput/needsDictionary.</td></tr>
+<tr><td>RIESGO03 Inspección</td><td>Exportación usa la lista del servicio sin comprobar estado. Pendiente test específico. Propuesta: validar respuesta antes de escribir XLSX.</td></tr></table>
+<p>El código de producción se conserva. No se declara corregido un bug solamente por documentarlo. Las diferencias de respuestas vacías (categorías 200, productos 404) requieren acuerdo de contrato antes de calificarlas como defectos.</p><p class="page">5 de 6</p></section>
+<section><h2>Scrum y trabajo colaborativo</h2>
+<p>Sprint propuesto: dos días. Día 1: organización, entorno, revisión de clases y ejecución por responsable. Día 2: revisión cruzada, integración, evidencia funcional y ensayo de exposición. Registrar lo realizado efectivamente en el tablero.</p>
+<table><tr><th>Responsable</th><th>Backlog y rama</th><th>Evidencia entregada</th></tr>
+<tr><td>Persona 1</td><td>Repositorio, CI e integración<br>chore/organizacion</td><td>Issue, PR y reporte global</td></tr>
+<tr><td>Persona 2</td><td>Categorías<br>test/categorias</td><td>Issue, commit, PR y tests</td></tr>
+<tr><td>Persona 3</td><td>Productos<br>test/productos</td><td>Issue, commit, PR y tests</td></tr>
+<tr><td>Persona 4</td><td>Utilidades y bugs<br>test/utilidades</td><td>Issue, commit, PR y tests</td></tr>
+<tr><td>Jesus Zeballos</td><td>Postman y plan<br>jesus-zeballos</td><td>Issue #5, PR personal, Runner 57 passed</td></tr></table>
+<h3>Seguimiento</h3><p>Tablero: Pendiente, En curso, En revisión y Terminado. Reunión diaria breve sobre avances, siguiente tarea y bloqueo. Cada PR referencia su issue; una persona distinta revisa los cambios. Terminado significa revisado, probado, documentado e integrado.</p>
+<h3>Registro de colaboración real</h3>
+<p>Repositorio: https://github.com/Sunner-01/SQA-Parcial-1</p>
+<p>Rama de trabajo Persona 5: jesus-zeballos</p>
+<p>Responsable Persona 5: Jesus Zeballos (Suite Postman, informes y casos de prueba)</p>
+<h3>Entrega y exposición</h3><p>Repositorio con código, tests, README y colección; informe de seis páginas; exposición de seis minutos. La demo combina pruebas Java, contenido de Excel, Postman, cobertura y flujo GitHub. Cada integrante explica su propia área.</p><p class="note">Las plantillas oficiales de casos y bugs no estaban entre los archivos recibidos. Trasladar el contenido si el docente exige ese formato. Completar nombres, enlaces y capturas antes de entregar. La CI está preparada, pero su ejecución en GitHub y la colaboración del equipo aún deben realizarse.</p><p class="page">6 de 6</p></section>
+</html>

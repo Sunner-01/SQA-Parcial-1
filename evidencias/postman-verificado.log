@@ -1,0 +1,156 @@
+newman
+
+SQA examen - Categorias y Productos
+
+→ 01 Crear categoria propia
+  POST http://localhost:8080/api/v1/categories [200 OK, 469B, 25ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Categoria creada
+
+→ 02 Listar categorias
+  GET http://localhost:8080/api/v1/categories [200 OK, 616B, 4ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Contiene categoria creada
+
+→ 03 Consultar categoria
+  GET http://localhost:8080/api/v1/categories/18 [200 OK, 471B, 4ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Nombre persistido
+
+→ 04 Actualizar categoria
+  PUT http://localhost:8080/api/v1/categories/18 [200 OK, 443B, 7ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Categoria actualizada
+
+→ 05 Verificar actualizacion categoria
+  GET http://localhost:8080/api/v1/categories/18 [200 OK, 442B, 3ms]
+  √  HTTP 200
+  √  Cambio persistido
+
+→ 06 Crear producto con imagen
+  POST http://localhost:8080/api/v1/products [200 OK, 598B, 11ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Producto creado
+
+→ 07 Consultar producto e imagen
+  GET http://localhost:8080/api/v1/products/16 [200 OK, 600B, 4ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Datos e imagen originales
+
+→ 08 Listar productos
+  GET http://localhost:8080/api/v1/products [200 OK, 843B, 5ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Contiene producto creado
+
+→ 09 Buscar por nombre
+  GET http://localhost:8080/api/v1/products/filter/Leche%20SQA [200 OK, 843B, 6ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Filtro contiene producto
+
+→ 10 Actualizar producto
+  PUT http://localhost:8080/api/v1/products/16 [200 OK, 601B, 12ms]
+  √  HTTP 200
+  √  Codigo de negocio
+  √  Campos actualizados
+
+→ 11 Verificar actualizacion producto
+  GET http://localhost:8080/api/v1/products/16 [200 OK, 600B, 4ms]
+  √  HTTP 200
+  √  Cambio persistido
+
+→ 12 Exportar categories Excel
+  GET http://localhost:8080/api/v1/categories/export/excel [200 OK, 3.88kB, 9ms]
+  √  HTTP 200
+  √  Archivo adjunto
+  √  Contenido binario ZIP XLSX
+
+→ 13 Exportar products Excel
+  GET http://localhost:8080/api/v1/products/export/excel [200 OK, 3.94kB, 12ms]
+  √  HTTP 200
+  √  Archivo adjunto
+  √  Contenido binario ZIP XLSX
+
+→ 14 Categoria inexistente
+  GET http://localhost:8080/api/v1/categories/0 [404 Not Found, 381B, 3ms]
+  √  HTTP 404
+  √  Codigo de negocio
+
+→ 15 Producto inexistente
+  GET http://localhost:8080/api/v1/products/0 [404 Not Found, 372B, 2ms]
+  √  HTTP 404
+  √  Codigo de negocio
+
+→ 16 Crear producto categoria inexistente
+  POST http://localhost:8080/api/v1/products [404 Not Found, 394B, 8ms]
+  √  HTTP 404
+  √  Codigo de negocio
+
+→ 17 Actualizar producto inexistente
+  PUT http://localhost:8080/api/v1/products/0 [404 Not Found, 373B, 8ms]
+  √  HTTP 404
+  √  Codigo de negocio
+
+→ 18 Producto sin archivo
+  POST http://localhost:8080/api/v1/products [400 Bad Request, 5.71kB, 10ms]
+  √  HTTP 400
+
+→ 19 Precio no numerico
+  POST http://localhost:8080/api/v1/products [400 Bad Request, 7.01kB, 8ms]
+  √  HTTP 400
+
+→ 20 ID categoria no numerico
+  GET http://localhost:8080/api/v1/categories/abc [400 Bad Request, 7.02kB, 3ms]
+  √  HTTP 400
+
+→ 21 JSON mal formado
+  POST http://localhost:8080/api/v1/categories [400 Bad Request, 7.3kB, 4ms]
+  √  HTTP 400
+
+→ 22 Eliminar producto propio
+  DELETE http://localhost:8080/api/v1/products/16 [200 OK, 359B, 7ms]
+  √  HTTP 200
+  √  Codigo de negocio
+
+→ 23 Verificar producto eliminado
+  GET http://localhost:8080/api/v1/products/16 [404 Not Found, 372B, 3ms]
+  √  HTTP 404
+  √  Codigo de negocio
+
+→ 24 Eliminar categoria propia
+  DELETE http://localhost:8080/api/v1/categories/18 [200 OK, 368B, 6ms]
+  √  HTTP 200
+  √  Codigo de negocio
+
+→ 25 Verificar categoria eliminada
+  GET http://localhost:8080/api/v1/categories/18 [404 Not Found, 381B, 3ms]
+  √  HTTP 404
+  √  Codigo de negocio
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              25 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              25 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              57 │               0 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 2.2s                                    │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 37.96kB (approx)                       │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 6ms [min: 2ms, max: 25ms, s.d.: 4ms] │
+└─────────────────────────────────────────────────────────────┘
+
